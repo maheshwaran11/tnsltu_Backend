@@ -91,6 +91,45 @@ if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
                     ";
                     $params = [$district];
                 }
+            } elseif (in_array($currentUserType, ['taluk_admin','taluk_subadmin'])) {
+                // District admins → prefer created_by, fallback to district
+
+                // First check count by created_by
+                $checkStmt = $pdo->prepare("
+                    SELECT COUNT(*) 
+                    FROM users u
+                    LEFT JOIN user_details ud ON u.id = ud.user_id
+                    WHERE ud.user_type IN ('user') AND ud.created_by = ?
+                ");
+                $checkStmt->execute([$currentUserId]);
+                $createdByCount = $checkStmt->fetchColumn();
+
+                if ($createdByCount > 0) {
+                    $sql = "
+                        SELECT COUNT(*) AS normal_users
+                        FROM users u
+                        LEFT JOIN user_details ud ON u.id = ud.user_id
+                        WHERE ud.user_type IN ('user',) AND ud.created_by = ?
+                    ";
+                    $params = [$currentUserId];
+                } else {
+                    // fallback → district-based count
+                    $districtStmt = $pdo->prepare("SELECT district FROM user_details WHERE user_id = ?");
+                    $districtStmt->execute([$currentUserId]);
+                    $district = $districtStmt->fetchColumn();
+
+                    $talukStmt = $pdo->prepare("SELECT taluk FROM user_details WHERE user_id = ?");
+                    $talukStmt->execute([$currentUserId]);
+                    $taluk = $talukStmt->fetchColumn();
+
+                    $sql = "
+                        SELECT COUNT(*) AS normal_users
+                        FROM users u
+                        LEFT JOIN user_details ud ON u.id = ud.user_id
+                        WHERE ud.user_type IN ('user') AND ud.district = ? AND ud.taluk = ?
+                    ";
+                    $params = [$district, $taluk];
+                }
             } else {
                 $status = 403;
                 $message = 'Unauthorized access';

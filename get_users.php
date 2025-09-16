@@ -49,7 +49,7 @@ if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
                     u.id, u.username, u.email, 
                     ud.user_type, ud.address, ud.address_tamil, ud.district, ud.taluk, ud.state, ud.zipcode,
                     ud.phone, ud.gender, ud.dob, ud.profile_photo, ud.status, ud.category, 
-                    ud.notes, ud.member_id, ud.name, ud.created_by,
+                    ud.notes, ud.member_id, ud.name, ud.relation_name, ud.relation_type, ud.subscription_number, ud.donation_number, ud.card_type, ud.card_status, ud.created_by,
                     creator.username AS created_by_username
                 FROM users u 
                 LEFT JOIN user_details ud ON u.id = ud.user_id
@@ -63,8 +63,8 @@ if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
                 $stmt = $pdo->query($query . " ORDER BY u.id DESC;");
             } elseif (in_array($currentUserType, ['district_admin', 'district_subadmin']) && $district) {
                 $stmt = $pdo->prepare($query . " WHERE ud.created_by = ? ORDER BY u.id DESC;");
-                print_r($query . " WHERE ud.created_by = ? ORDER BY u.id DESC;");
-                print_r($currentUserId);
+                // print_r($query . " WHERE ud.created_by = ? ORDER BY u.id DESC;");
+                // print_r($currentUserId);
                 $stmt->execute([$currentUserId]);
             } else {
                 $status = 403;

@@ -52,7 +52,7 @@ if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
                 SELECT 
                     u.id, u.username, u.email, ud.user_type, ud.address, ud.address_tamil, ud.district, 
                     ud.taluk, ud.state, ud.zipcode, ud.phone, ud.gender, ud.dob, 
-                    ud.profile_photo, ud.status, ud.category, ud.notes, ud.member_id, ud.name
+                    ud.profile_photo, ud.status, ud.category, ud.notes, ud.member_id, ud.name, ud.relation_name, ud.relation_type, ud.card_type, ud.card_status, ud.subscription_number, ud.donation_number
                 FROM users u 
                 LEFT JOIN user_details ud ON u.id = ud.user_id
                 WHERE u.id = ?

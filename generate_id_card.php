@@ -56,7 +56,7 @@ $pdf->setBackground($backgroundImage);
 $pdf->AddPage();
 
 // Load Tamil font
-$pdf->AddFont('NotoSansTamil','','nt.ttf',true);
+$pdf->AddFont('NotoSansTamil','','NotoSansTamil-Regular.ttf',true);
 $pdf->SetFont('NotoSansTamil','',9);
 $pdf->SetTextColor(0, 0, 0);
 
@@ -96,6 +96,6 @@ $pdf->Output('F', $fileName);
 echo json_encode([
     "status" => "success",
     "message" => "ID card generated",
-    // "download_url" => "https://tnsltu.in/api/$fileName"
-    "download_url" => "http://localhost/api/$fileName"
+    "download_url" => "https://tnsltu.in/api/$fileName"
+    // "download_url" => "http://localhost/api/$fileName"
 ]);

@@ -2,7 +2,6 @@
     "require": {
         "firebase/php-jwt": "^6.11",
         "setasign/fpdf": "^1.8",
-        "setasign/tfpdf": "1.33",
-        "mpdf/mpdf": "8.2"
+        "setasign/tfpdf": "1.33"
     }
 }
