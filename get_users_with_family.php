@@ -74,7 +74,7 @@ try {
     // Fetch family members for this user
     $familyStmt = $pdo->prepare("
         SELECT id, user_id, name, relation, gender, dob, education,
-               education_year, current_year, current_status, claim_type
+               education_year, current_year, current_status, joining_year, final_year, course_duration, claim_type
         FROM family_members
         WHERE user_id = ?
         ORDER BY id

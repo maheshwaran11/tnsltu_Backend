@@ -35,9 +35,19 @@ if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
         $data = json_decode(file_get_contents("php://input"));
 
         $username      = trim($data->username ?? '');
-        $fullName      = trim($data->name ?? '');
         $email         = trim($data->email ?? '');
         $password      = $data->password ?? '';
+        
+        
+        if($data->user_type === 'user'){
+            $username = 'user' . rand(0, 99999999);
+            $password = $username;
+            $email = $username . '@tnsltu.in';
+        }
+
+        
+
+        $fullName      = trim($data->name ?? '');
         $user_type     = $data->user_type ?? 'user';
         $address       = $data->address ?? '';
         $address_tamil = $data->address_tamil ?? '';
@@ -52,7 +62,13 @@ if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
         $status        = $data->status ?? 'inactive';
         $category     = $data->category ?? '';
         $notes         = $data->notes ?? null;
-        $member_id     = $data->member_id ?? null;  
+        $member_id     = $data->member_id ?? null;
+        $relation_name = $data->relation_name ?? null;
+        $relation_type = $data->relation_type ?? null;
+        $card_status   = $data->card_status ?? null;
+        $card_type   = $data->card_type ?? null;
+        $subscription_number = $data->subscription_number ?? null;
+        $donation_number = $data->donation_number ?? null;
 
         // Initialize profile photo path
         $profilePhotoPath = null;
@@ -124,15 +140,15 @@ if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
             $stmt2 = $pdo->prepare("
                 INSERT INTO user_details (
                     user_id, user_type, address, address_tamil, district, taluk, state, zipcode, phone,
-                    gender, dob, status, category, notes, profile_photo, member_id, name, created_by
+                    gender, dob, status, category, notes, profile_photo, member_id, name, relation_name, relation_type, subscription_number, donation_number, card_type, card_status, created_by
                 ) VALUES (
-                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
                 )
             ");
 
             $stmt2->execute([
                 $user_id, $user_type, $address, $address_tamil, $district, $taluk, $state, $zipcode, $phone,
-                $gender, $dob, $status, $category, $notes, $profilePhotoPath, $member_id, $fullName, $currentUserId
+                $gender, $dob, $status, $category, $notes, $profilePhotoPath, $member_id, $fullName, $relation_name, $relation_type, $subscription_number, $donation_number, $card_type, $card_status, $currentUserId
             ]);
 
             $pdo->commit();
